@@ -95,7 +95,3 @@ sudo dhclient wlan0
 ip a
 ping 8.8.8.8
 ```
-
----
-
-Se me informar qual distro e versão você está usando, posso dar o comando exato. Quer?
