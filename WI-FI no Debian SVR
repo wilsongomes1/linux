@@ -1,46 +1,41 @@
-Aqui está um exemplo de página HTML simples com instruções para **conectar um Linux Server via Wi-Fi**, já formatado para você hospedar e compartilhar:
+Para conectar um **Linux Server** (como Ubuntu Server, Debian Server etc.) via **Wi-Fi**, você normalmente faz isso manualmente, já que servidores não costumam ter interfaces gráficas.
 
-```html
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Como Conectar Linux Server via Wi-Fi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        h1 {
-            color: #222;
-        }
-        pre {
-            background-color: #eee;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-        code {
-            font-family: monospace;
-        }
-    </style>
-</head>
-<body>
+Aqui está o passo a passo genérico para configurar:
 
-    <h1>Como Conectar Linux Server via Wi-Fi</h1>
+---
 
-    <h2>1️⃣ Verificar o Nome da Interface Wi-Fi</h2>
-    <pre><code>ip link
-iw dev</code></pre>
+## 1️⃣ Verifique o nome da interface Wi-Fi
 
-    <h2>2️⃣ Configuração com Netplan (Ubuntu Server 18.04+)</h2>
-    <p>Edite o arquivo:</p>
-    <pre><code>sudo nano /etc/netplan/01-netcfg.yaml</code></pre>
+Use:
 
-    <p>Exemplo de conteúdo:</p>
-    <pre><code>network:
+```bash
+ip link
+```
+
+ou
+
+```bash
+iw dev
+```
+
+Normalmente será algo como `wlan0` ou `wlp2s0`.
+
+---
+
+## 2️⃣ Edite ou crie a configuração Wi-Fi
+
+### Ubuntu Server 18.04+ usa Netplan:
+
+Edite o arquivo:
+
+```bash
+sudo nano /etc/netplan/01-netcfg.yaml
+```
+
+Exemplo de configuração:
+
+```yaml
+network:
   version: 2
   renderer: networkd
   wifis:
@@ -48,37 +43,59 @@ iw dev</code></pre>
       dhcp4: true
       access-points:
         "NOME-DA-REDE":
-          password: "SENHA-DA-REDE"</code></pre>
+          password: "SENHA-DA-REDE"
+```
 
-    <p>Aplicar as alterações:</p>
-    <pre><code>sudo netplan apply</code></pre>
+**Depois aplique:**
 
-    <h2>3️⃣ Configuração com wpa_supplicant (Debian ou Ubuntu Antigo)</h2>
-    <p>Edite ou crie o arquivo:</p>
-    <pre><code>sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</code></pre>
+```bash
+sudo netplan apply
+```
 
-    <p>Exemplo de conteúdo:</p>
-    <pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+---
+
+### Se for um sistema com `wpa_supplicant` (Debian, Ubuntu mais antigo):
+
+1️⃣ Crie ou edite o arquivo:
+
+```bash
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+Conteúdo:
+
+```bash
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=BR
 
 network={
     ssid="NOME-DA-REDE"
     psk="SENHA-DA-REDE"
-}</code></pre>
-
-    <p>Iniciar manualmente:</p>
-    <pre><code>sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf</code></pre>
-
-    <p>Obter IP via DHCP:</p>
-    <pre><code>sudo dhclient wlan0</code></pre>
-
-    <h2>4️⃣ Verificar Conexão</h2>
-    <pre><code>ip a
-ping 8.8.8.8</code></pre>
-
-</body>
-</html>
+}
 ```
 
-Se quiser posso também criar um botão para copiar os comandos ou deixar o visual mais moderno, é só pedir.
+2️⃣ Inicie manualmente:
+
+```bash
+sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+3️⃣ Pegue IP via DHCP:
+
+```bash
+sudo dhclient wlan0
+```
+
+---
+
+## 3️⃣ Verifique se conectou:
+
+```bash
+ip a
+ping 8.8.8.8
+```
+
+---
+
+Se me informar qual distro e versão você está usando, posso dar o comando exato. Quer?
